@@ -1,24 +1,34 @@
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // Get the login form
-    const loginForm = document.getElementById('loginForm');
-    
-    // Add event listener for form submission
+// login form
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault(); 
         
-        // Get form input values
         const username = document.querySelector('input[name="username"]').value;
         const password = document.querySelector('input[name="password"]').value;
         
-        // Basic validation
         if (username && password) {
-            // Redirect to viewPosts.html
             window.location.href = 'viewPosts.html';
         } else {
             alert('Please fill in all fields');
         }
     });
-    
+}
+
+// logout link 
+document.querySelectorAll('.logoutLink').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log("Logout clicked");
+        window.location.href = 'index.html';
+    });
 });
+
+// mobile hamburger menu 
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+}

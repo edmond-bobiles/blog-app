@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>View Posts</title>
+    <title>Single Posts</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,15 +26,16 @@
                     </svg>
                 </button>
                 
-                <!-- right navbar for desktop -->
+                 <!-- right navbar for desktop -->
                 <div class="hidden md:flex space-x-8">
-                    <a href="viewPosts.html"
+                    <a href="viewPosts.html" 
                     class="text-white bg-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                     Home</a>
-                    <a href="createPost.html"
+                    <a href="createPost.html" 
                     class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-colors duration-200">
                     Create Post</a>
-                    <a href="#" class="logoutLink text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-colors duration-200">
+                    <a id="logoutLink" href="#" 
+                    class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-colors duration-200">
                     Logout</a>
                 </div>
             </div>
@@ -43,17 +44,20 @@
             <div id="mobile-menu" class="md:hidden hidden">
                 <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-700">
                     <a href="viewPosts.html" 
-                    class="text-white bg-gray-900 block px-3 py-2 rounded-md text-base font-medium"">
+                    class="text-white bg-gray-900 block px-3 py-2 rounded-md text-base font-medium">
                     Home</a>
-                    <a href="createPost.html" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium transition-colors duration-200" >
+                    <a href="createPost.html" 
+                    class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium transition-colors duration-200">
                     Create Post</a>
-                    <a class="logoutLink text-gray-300 hover:text-white block px-3 py-2 text-base font-medium transition-colors duration-200">
+                    <a id="logoutLink" href="#" 
+                    class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium transition-colors duration-200">
                     Logout</a>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Demo content -->
     <div class="container mx-auto px-4 mt-8 max-w-6xl">
         <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to Blog-App</h1>
         <p class="text-gray-600 text-lg leading-relaxed">This is a demo page to showcase the navbar. The navbar is responsive and will collapse on smaller screens.</p>

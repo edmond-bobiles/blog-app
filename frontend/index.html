@@ -1,54 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/styles.css" rel="stylesheet" type="text/css">
-    
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-light">
-    <!-- Main Container -->
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
-
-    <!-- Login Card -->
-    <div class="login-card p-4">
-
-        <!-- Login Form -->
-        <div class="text-center mb-4 mt-2">
-            <h2 class="fw-bold mb-0">Login Form</h2>
-        </div>
-
-        <form id="loginForm">
-            <div class="mb-3">
-                <label class="form-label">Email or Phone</label>
-                <input class="form-control" type="text"  name="username" required>
+<body class="bg-white-">
+    <!-- main container -->
+    <div class="flex min-h-screen items-center justify-center px-2">
+        <!-- login card -->
+        <div class="relative w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
+            <!-- login form -->
+            <div class="mb-6 text-center">
+                <h2 class="text-3xl font-bold text-black">Login</h2>
             </div>
+        
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label class="mb-2 block text-sm font-medium text-gray-600">Email</label>
+                    <input class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-colors duration-300 focus:border-blue-500 focus:outline-none" type="text" name="username" required />
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input class="form-control" type="password"  name="password" required>
-            </div>
+                <div class="mb-6">
+                    <label class="mb-2 block text-sm font-medium text-gray-600">Password</label>
+                    <input class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-colors duration-300 focus:border-blue-500 focus:outline-none" type="password" name="password" required />
+                </div>
 
-            <div class="mb-4">
-                <button class="login-btn" type="submit">Login</button>
-            </div>
+                <div class="mb-6">
+                    <button class="w-full cursor-pointer rounded-lg bg-blue-600 py-3.5 text-base font-semibold tracking-wider text-white uppercase transition-colors duration-200 hover:bg-blue-700" type="submit">Login</button>
+                </div>
 
-            <div class="signup-text">
-                Don't have an account? <a href="#" class="signup-link">Signup</a>
-            </div>
-        </form>
+                <div class="text-center text-sm text-gray-600">
+                    Don't have an account?
+                    <a href="#" class="text-cyan-400 no-underline transition-colors duration-200 hover:text-cyan-500">Signup</a>
+                </div>
+            </form>
 
         </div>
     </div>
-
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom JavaScript -->
     <script src="js/main.js"></script>
-</body>
+  </body>
 </html>
