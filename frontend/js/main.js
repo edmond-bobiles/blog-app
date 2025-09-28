@@ -167,7 +167,12 @@ function renderSinglePost(post) {
     const commentsHtml = (post.comments && post.comments.length)
         ? post.comments.map(c => `
             <div class="bg-gray-50 rounded-lg p-3 mb-2">
-                <span class="font-medium text-sm text-gray-900">User #${c.user_id}</span>
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-medium text-sm text-gray-900">User #${c.user_id}</span>
+                    ${getCurrentUser() && getCurrentUser().id === post.user_id
+                        ? `<button data-comment-id="${c.id}" data-post-id="${post.id}" class="delete-comment-btn text-xs text-red-600 hover:underline">Delete</button>`
+                        : ''}
+                </div>
                 <p class="text-gray-700 text-sm">${escapeHtml(c.content)}</p>
             </div>
         `).join('')
