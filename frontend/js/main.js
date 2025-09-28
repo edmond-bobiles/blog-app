@@ -1,7 +1,7 @@
-// main.js (replace your current file with this)
-const API_BASE = "http://127.0.0.1:8000"; // change if your backend is elsewhere
+// main.js
+const API_BASE = "http://127.0.0.1:8000"; // backend base URL
 
-// get current user from localStorage (after login)
+// ----------------- UTILITIES -----------------
 function getCurrentUser() {
     try {
         return JSON.parse(localStorage.getItem('user')) || null;
@@ -10,10 +10,25 @@ function getCurrentUser() {
     }
 }
 
-// LOGIN form (if present)
+function escapeHtml(str) {
+    if (!str) return '';
+    return str
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+}
+
+function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+}
+
+// ----------------- AUTH -----------------
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
-    loginForm.addEventListener('submit', async function(e) {
+    loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         const username = document.querySelector('input[name="username"]').value.trim();
         const password = document.querySelector('input[name="password"]').value.trim();
@@ -25,11 +40,10 @@ if (loginForm) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password })
             });
-            if (!res.ok) {
-                const err = await res.json();
-                return alert(err.detail || 'Login failed');
+            const data = await res.json();
+            if (!res.ok || data.error) {
+                return alert(data.error || data.detail || 'Login failed');
             }
-            const data = await res.json(); // { id, username }
             localStorage.setItem('user', JSON.stringify(data));
             window.location.href = 'viewPosts.html';
         } catch (err) {
@@ -39,16 +53,15 @@ if (loginForm) {
     });
 }
 
-// LOGOUT links (global)
 document.querySelectorAll('.logoutLink').forEach(link => {
-    link.addEventListener('click', function(e) {
+    link.addEventListener('click', function (e) {
         e.preventDefault();
         localStorage.removeItem('user');
         window.location.href = 'index.html';
     });
 });
 
-// mobile hamburger menu
+// ----------------- NAVBAR -----------------
 const mobileMenuButton = document.getElementById('mobile-menu-button');
 const mobileMenu = document.getElementById('mobile-menu');
 if (mobileMenuButton && mobileMenu) {
@@ -57,20 +70,17 @@ if (mobileMenuButton && mobileMenu) {
     });
 }
 
-/* ---------------------------
-   POSTS / RENDERING LOGIC
-   --------------------------- */
-
+// ----------------- POSTS LIST -----------------
 function createPostCard(post) {
-    // show username as "User #<id>" unless you extend backend to include username.
     const ownerLabel = `User #${post.user_id}`;
-
     const commentsHtml = (post.comments && post.comments.length)
         ? post.comments.map(c => `
             <div class="bg-gray-50 rounded-lg p-3 mb-2">
                 <div class="flex items-center justify-between mb-1">
                     <span class="font-medium text-sm text-gray-900">User #${c.user_id}</span>
-                    ${getCurrentUser() && getCurrentUser().id === post.user_id ? `<button data-comment-id="${c.id}" data-post-id="${post.id}" class="delete-comment-btn text-xs text-red-600 hover:underline">Delete</button>` : ''}
+                    ${getCurrentUser() && getCurrentUser().id === post.user_id
+                        ? `<button data-comment-id="${c.id}" data-post-id="${post.id}" class="delete-comment-btn text-xs text-red-600 hover:underline">Delete</button>`
+                        : ''}
                 </div>
                 <p class="text-gray-700 text-sm">${escapeHtml(c.content)}</p>
             </div>
@@ -98,11 +108,9 @@ function createPostCard(post) {
                     </div>
                 </div>
             </div>
-
             <div class="p-6">
                 <h4 class="font-semibold text-gray-900 mb-4">Comments (${(post.comments || []).length})</h4>
                 ${commentsHtml}
-
                 <div class="mt-4 flex space-x-2">
                     <input type="text" placeholder="Write a comment..." data-post-input="${post.id}" class="comment-input flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                     <button data-post-id="${post.id}" class="post-comment-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
@@ -114,17 +122,6 @@ function createPostCard(post) {
     `;
 }
 
-// escape helper to avoid HTML injection
-function escapeHtml(str) {
-    if (!str) return '';
-    return str
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#39;');
-}
-
 async function loadPosts() {
     const container = document.getElementById('posts-container');
     const noPosts = document.getElementById('no-posts');
@@ -132,98 +129,27 @@ async function loadPosts() {
 
     try {
         const res = await fetch(`${API_BASE}/posts/`);
-        if (!res.ok) throw new Error('Failed to load posts');
+        if (!res.ok) {
+            throw new Error('HTTP error: ' + res.status);
+        }
         const posts = await res.json();
+        if (posts.error) {
+            throw new Error(posts.error);
+        }
         if (!posts || posts.length === 0) {
-            noPosts.classList.remove('hidden');
+            if (noPosts) noPosts.classList.remove('hidden');
             container.innerHTML = '';
             return;
         }
-        noPosts.classList.add('hidden');
+        if (noPosts) noPosts.classList.add('hidden');
         container.innerHTML = posts.map(createPostCard).join('');
     } catch (err) {
-        console.error(err);
+        console.error('Error loading posts:', err);
         container.innerHTML = `<div class="text-red-600">Failed to load posts. Is the backend running?</div>`;
     }
 }
 
-// event delegation: handle comment posting and deletion and Enter key
-document.addEventListener('click', async function(e) {
-    // Post comment
-    if (e.target.matches('.post-comment-btn')) {
-        const postId = e.target.dataset.postId;
-        const input = document.querySelector(`input[data-post-input="${postId}"]`);
-        const text = input?.value.trim();
-        const currentUser = getCurrentUser();
-        if (!currentUser) return alert('You must be logged in to comment.');
-        if (!text) return;
-        // call API
-        try {
-            const res = await fetch(`${API_BASE}/posts/${postId}/comments`, {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content: text, user_id: currentUser.id })
-            });
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.detail || 'Failed to post comment');
-            }
-            // refresh posts (simple)
-            await loadPosts();
-        } catch (err) {
-            console.error(err);
-            alert(err.message || 'Could not post comment');
-        }
-    }
-
-    // Delete comment (only shown when current user is post owner)
-    if (e.target.matches('.delete-comment-btn')) {
-        const commentId = e.target.dataset.commentId;
-        const postId = e.target.dataset.postId;
-        const currentUser = getCurrentUser();
-        if (!currentUser) return alert('You must be logged in to delete comments.');
-        if (!confirm('Delete this comment?')) return;
-        try {
-            const res = await fetch(`${API_BASE}/comments/${commentId}`, {
-                method: 'DELETE',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ owner_user_id: currentUser.id })
-            });
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.detail || 'Failed to delete comment');
-            }
-            // refresh posts
-            await loadPosts();
-        } catch (err) {
-            console.error(err);
-            alert(err.message || 'Could not delete comment');
-        }
-    }
-});
-
-// Enter key to submit comment
-document.addEventListener('keypress', function(e) {
-    const el = e.target;
-    if (e.key === 'Enter' && el.matches('.comment-input')) {
-        const postId = el.getAttribute('data-post-input');
-        const btn = document.querySelector(`.post-comment-btn[data-post-id="${postId}"]`);
-        if (btn) btn.click();
-    }
-});
-
-// Only load posts on pages that have posts-container
-document.addEventListener('DOMContentLoaded', () => {
-    loadPosts();
-});
-
-// Utility: get query param
-function getQueryParam(name) {
-    const params = new URLSearchParams(window.location.search);
-    return params.get(name);
-}
-
-// Render a single post
+// ----------------- SINGLE POST -----------------
 function renderSinglePost(post) {
     const container = document.getElementById('single-post-container');
     if (!container) return;
@@ -241,9 +167,7 @@ function renderSinglePost(post) {
     const commentsHtml = (post.comments && post.comments.length)
         ? post.comments.map(c => `
             <div class="bg-gray-50 rounded-lg p-3 mb-2">
-                <div class="flex items-center justify-between mb-1">
-                    <span class="font-medium text-sm text-gray-900">User #${c.user_id}</span>
-                </div>
+                <span class="font-medium text-sm text-gray-900">User #${c.user_id}</span>
                 <p class="text-gray-700 text-sm">${escapeHtml(c.content)}</p>
             </div>
         `).join('')
@@ -258,7 +182,6 @@ function renderSinglePost(post) {
             <div class="p-6">
                 <h4 class="font-semibold text-gray-900 mb-4">Comments (${(post.comments || []).length})</h4>
                 <div id="single-comments">${commentsHtml}</div>
-
                 <div class="mt-6 flex space-x-2">
                     <input type="text" id="single-comment-input" placeholder="Write a comment..." 
                         class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
@@ -270,7 +193,6 @@ function renderSinglePost(post) {
         </div>
     `;
 
-    // attach handler for new comment
     document.getElementById('single-comment-btn').addEventListener('click', async () => {
         const input = document.getElementById('single-comment-input');
         const text = input.value.trim();
@@ -284,11 +206,11 @@ function renderSinglePost(post) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ content: text, user_id: currentUser.id })
             });
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.detail || 'Failed to post comment');
+            const data = await res.json();
+            if (!res.ok || data.error) {
+                throw new Error(data.error || data.detail || 'Failed to post comment');
             }
-            // refresh single post after comment
+            input.value = '';
             await loadSinglePost(post.id);
         } catch (err) {
             console.error(err);
@@ -302,8 +224,10 @@ async function loadSinglePost(id) {
     if (!container) return;
     try {
         const res = await fetch(`${API_BASE}/posts/${id}`);
-        if (!res.ok) throw new Error('Post not found');
         const post = await res.json();
+        if (!res.ok || post.error) {
+            throw new Error(post.error || post.detail || 'Post not found');
+        }
         renderSinglePost(post);
     } catch (err) {
         console.error(err);
@@ -311,14 +235,86 @@ async function loadSinglePost(id) {
     }
 }
 
-// Detect page
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('posts-container')) {
-        loadPosts();
+// ----------------- COMMENT HANDLERS -----------------
+document.addEventListener('click', async function (e) {
+    // Add comment
+    if (e.target.matches('.post-comment-btn')) {
+        const postId = e.target.dataset.postId;
+        const input = document.querySelector(`input[data-post-input="${postId}"]`);
+        const text = input?.value.trim();
+        const currentUser = getCurrentUser();
+        if (!currentUser) return alert('You must be logged in to comment.');
+        if (!text) return;
+
+        try {
+            const res = await fetch(`${API_BASE}/posts/${postId}/comments`, {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: text, user_id: currentUser.id })
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) {
+                throw new Error(data.error || data.detail || 'Failed to post comment');
+            }
+            input.value = '';
+
+            // refresh the right page
+            if (document.getElementById('posts-container')) {
+                await loadPosts();
+            } else if (document.getElementById('single-post-container')) {
+                await loadSinglePost(postId);
+            }
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Could not post comment');
+        }
     }
+
+    // Delete comment
+    if (e.target.matches('.delete-comment-btn')) {
+        const commentId = e.target.dataset.commentId;
+        const postId = e.target.dataset.postId;
+        const currentUser = getCurrentUser();
+        if (!currentUser) return alert('You must be logged in to delete comments.');
+        if (!confirm('Delete this comment?')) return;
+
+        try {
+            const res = await fetch(`${API_BASE}/comments/${commentId}`, {
+                method: 'DELETE',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ owner_user_id: currentUser.id })
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) {
+                throw new Error(data.error || data.detail || 'Failed to delete comment');
+            }
+
+            // refresh the right page
+            if (document.getElementById('posts-container')) {
+                await loadPosts();
+            } else if (document.getElementById('single-post-container')) {
+                await loadSinglePost(postId);
+            }
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Could not delete comment');
+        }
+    }
+});
+
+document.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter' && e.target.matches('.comment-input')) {
+        const postId = e.target.getAttribute('data-post-input');
+        const btn = document.querySelector(`.post-comment-btn[data-post-id="${postId}"]`);
+        if (btn) btn.click();
+    }
+});
+
+// ----------------- INIT -----------------
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('posts-container')) loadPosts();
     if (document.getElementById('single-post-container')) {
         const id = getQueryParam('id');
         if (id) loadSinglePost(id);
     }
 });
-

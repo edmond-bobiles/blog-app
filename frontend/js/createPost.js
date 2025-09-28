@@ -1,33 +1,51 @@
 // createPost.js
-const createPostForm = document.getElementById('createPostForm');
-const API_BASE = "http://127.0.0.1:8000";
-
-if (createPostForm) {
-    createPostForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const title = document.getElementById('postTitle').value.trim();
-        const description = document.getElementById('postDescription').value.trim();
-        const currentUser = JSON.parse(localStorage.getItem('user') || 'null');
-        if (!currentUser) return alert('You must be logged in to create posts.');
-
-        if (!title || !description) return alert('Please fill in all fields.');
-
-        try {
-            const res = await fetch(`${API_BASE}/posts/`, {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title, description, user_id: currentUser.id })
-            });
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.detail || 'Failed to create post');
+document.addEventListener('DOMContentLoaded', function() {
+    const createPostForm = document.getElementById('createPostForm');
+    
+    if (createPostForm) {
+        createPostForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                alert('You must be logged in to create a post.');
+                return;
             }
-            const post = await res.json();
-            // redirect to posts page (or single post)
-            window.location.href = 'viewPosts.html';
-        } catch (err) {
-            console.error(err);
-            alert(err.message || 'Could not create post');
-        }
-    });
-}
+            
+            const title = document.getElementById('postTitle').value.trim();
+            const description = document.getElementById('postDescription').value.trim();
+            
+            if (!title || !description) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/posts/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description,
+                        user_id: currentUser.id
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok || data.error) {
+                    throw new Error(data.error || data.detail || 'Failed to create post');
+                }
+                
+                alert('Post created successfully!');
+                window.location.href = 'viewPosts.html';
+                
+            } catch (error) {
+                console.error('Error creating post:', error);
+                alert(error.message || 'Failed to create post. Please try again.');
+            }
+        });
+    }
+});
