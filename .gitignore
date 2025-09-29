@@ -1,14 +1,21 @@
-# Python venvs (root and backend)
+# Python virtual environments
 venv/
 backend/venv/
 
 # Python cache
 __pycache__/
 backend/__pycache__/
+*.pyc
 
 # Node modules
 node_modules/
 
-# OS junk
+# SQLite database
+*.db
+
+# OS junk files
 .DS_Store
 Thumbs.db
+
+# The zip file itself (so you don’t accidentally commit it)
+*.zip
