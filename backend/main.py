@@ -1,4 +1,3 @@
-# main.py (beginner friendly - simple error returns, no HTTPException/status codes)
 from fastapi import FastAPI, Depends, Body
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -6,12 +5,12 @@ from sqlalchemy.orm import Session
 import models, schemas
 from database import SessionLocal, engine, Base
 
-# Create tables if they don't exist
+# create tables if they don't exist
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Blog App API (simple mode)")
 
-# Allow local frontend to call this API during development
+# allows frontend to call this API 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -28,10 +27,7 @@ def get_db():
     finally:
         db.close()
 
-# --------------------------
-# Users (signup & login)
-# --------------------------
-
+# user signup and login
 @app.post("/users/")
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # check if username already exists
@@ -52,10 +48,14 @@ def login(user: schemas.UserCreate, db: Session = Depends(get_db)):
         return {"error": "Invalid credentials"}
     return {"id": db_user.id, "username": db_user.username}
 
-# --------------------------
-# Posts
-# --------------------------
+@app.get("/users/{user_id}")
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        return {"error": "User not found"}
+    return {"id": user.id, "username": user.username}
 
+# post
 @app.post("/posts/")
 def create_post(payload: schemas.PostCreate, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == payload.user_id).first()
@@ -104,10 +104,7 @@ def get_post(post_id: int, db: Session = Depends(get_db)):
         "comments": comments
     }
 
-# --------------------------
-# Comments
-# --------------------------
-
+# posts comment
 @app.post("/posts/{post_id}/comments")
 def add_comment(post_id: int, payload: schemas.CommentCreate, db: Session = Depends(get_db)):
     p = db.query(models.Post).filter(models.Post.id == post_id).first()
@@ -122,6 +119,7 @@ def add_comment(post_id: int, payload: schemas.CommentCreate, db: Session = Depe
     db.refresh(new_comment)
     return {"id": new_comment.id, "content": new_comment.content, "post_id": new_comment.post_id, "user_id": new_comment.user_id}
 
+# deletes comment
 @app.delete("/comments/{comment_id}")
 def delete_comment(comment_id: int, owner_user_id: int = Body(..., embed=True), db: Session = Depends(get_db)):
     comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
@@ -130,8 +128,6 @@ def delete_comment(comment_id: int, owner_user_id: int = Body(..., embed=True), 
     post = db.query(models.Post).filter(models.Post.id == comment.post_id).first()
     if not post:
         return {"error": "Related post not found"}
-    if post.user_id != owner_user_id:
-        return {"error": "Only the owner of the post can delete comments on that post"}
     db.delete(comment)
     db.commit()
     return {"detail": "Comment deleted"}

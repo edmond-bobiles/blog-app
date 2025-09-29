@@ -1,0 +1,14 @@
+# Python venvs (root and backend)
+venv/
+backend/venv/
+
+# Python cache
+__pycache__/
+backend/__pycache__/
+
+# Node modules
+node_modules/
+
+# OS junk
+.DS_Store
+Thumbs.db

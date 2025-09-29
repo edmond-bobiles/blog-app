@@ -1,4 +1,3 @@
-// createPost.js
 document.addEventListener('DOMContentLoaded', function() {
     const createPostForm = document.getElementById('createPostForm');
     
@@ -44,8 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             } catch (error) {
                 console.error('Error creating post:', error);
-                alert(error.message || 'Failed to create post. Please try again.');
+                alert(error.message || 'Failed to create post.');
             }
         });
     }
 });
+
