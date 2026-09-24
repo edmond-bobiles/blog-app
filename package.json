@@ -1,0 +1,15 @@
+{
+  "name": "blog-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Blog app — Python/FastAPI backend + static frontend, orchestrated via npm",
+  "scripts": {
+    "setup": "bash setup.sh",
+    "dev": "concurrently --names backend,frontend --prefix-colors blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && .venv/bin/uvicorn main:app --reload --host 127.0.0.1 --port 8000",
+    "dev:frontend": "cd frontend && python3 -m http.server 5500"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
