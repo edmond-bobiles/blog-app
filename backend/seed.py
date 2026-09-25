@@ -13,11 +13,21 @@ try:
     if existing:
         print("testuser already exists — skipping seed.")
     else:
-        # test user
-        user = models.User(username="testuser", password="12345")
-        db.add(user)
+        # demo accounts
+        demo_accounts = [
+            {"username": "testuser", "password": "12345"},
+            {"username": "isagi", "password": "12345"},
+            {"username": "Barou", "password": "12345"},
+            {"username": "Kaiser", "password": "12345"},
+        ]
+
+        for account in demo_accounts:
+            user = models.User(username=account["username"], password=account["password"])
+            db.add(user)
         db.commit()
-        db.refresh(user)
+
+        # get testuser for the dummy post/comment
+        user = db.query(models.User).filter(models.User.username == "testuser").first()
 
         # creates a dummy post 
         post = models.Post(
