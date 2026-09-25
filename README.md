@@ -1,6 +1,6 @@
 # Blog App Setup & Run Instructions
 
-## Quick Start (recommended)
+## Start
 
 From the repo root:
 
