@@ -6,7 +6,7 @@
   "scripts": {
     "setup": "bash setup.sh",
     "dev": "concurrently --names backend,frontend --prefix-colors blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "cd backend && .venv/bin/uvicorn main:app --reload --host 127.0.0.1 --port 8000",
+    "dev:backend": "bash -c 'cd backend && { [ -x .venv/bin/uvicorn ] || (python3 -m venv .venv && .venv/bin/pip install --upgrade pip && .venv/bin/pip install -r requirements.txt); } && .venv/bin/uvicorn main:app --reload --host 127.0.0.1 --port 8000'",
     "dev:frontend": "cd frontend && python3 -m http.server 5500"
   },
   "devDependencies": {
