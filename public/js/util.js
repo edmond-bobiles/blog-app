@@ -1,4 +1,5 @@
-const API_BASE = "http://127.0.0.1:8000"; 
+const isLocalDev = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const API_BASE = isLocalDev ? "http://127.0.0.1:8000" : "";
 
 function getCurrentUser() {
   try {

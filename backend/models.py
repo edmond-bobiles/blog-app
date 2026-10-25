@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+try:  # Package import on Vercel; direct import when run from backend/ locally.
+    from .database import Base
+except ImportError:
+    from database import Base
 
 class User(Base):
     __tablename__ = "users"

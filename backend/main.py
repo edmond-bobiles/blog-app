@@ -2,8 +2,12 @@ from fastapi import FastAPI, Depends, Body
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-import models, schemas
-from database import SessionLocal, engine, Base
+try:  # Package import on Vercel; direct imports when run from backend/ locally.
+    from . import models, schemas
+    from .database import SessionLocal, engine, Base
+except ImportError:
+    import models, schemas
+    from database import SessionLocal, engine, Base
 
 # create tables if they don't exist
 Base.metadata.create_all(bind=engine)
