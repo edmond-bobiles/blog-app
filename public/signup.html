@@ -5,27 +5,30 @@
     <title>Sign up</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-white-">
+<body class="auth-page">
     <!-- main container -->
     <div class="flex min-h-screen items-center justify-center px-2">
         <!-- login card -->
         <div class="relative w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
             <!-- login form -->
             <div class="mb-6 text-center">
+                <p class="brand-mark">Blog-App</p>
                 <h2 class="text-3xl font-bold text-black">Sign Up</h2>
+                <p class="auth-subtitle">A space for stories and conversation.</p>
             </div>
         
             <form id="loginForm">
                 <div class="mb-4">
-                    <label class="mb-2 block text-sm font-medium text-gray-600">Enter Your Username</label>
-                    <input class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-colors duration-300 focus:border-blue-500 focus:outline-none" type="text" name="username" required />
+                    <label for="username" class="mb-2 block text-sm font-medium text-gray-600">Username</label>
+                    <input class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-colors duration-300 focus:border-blue-500 focus:outline-none" type="text" id="username" autocomplete="username" name="username" required />
                 </div>
 
                 <div class="mb-6">
-                    <label class="mb-2 block text-sm font-medium text-gray-600">Enter Your Password</label>
-                    <input class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-colors duration-300 focus:border-blue-500 focus:outline-none" type="password" name="password" required />
+                    <label for="password" class="mb-2 block text-sm font-medium text-gray-600">Password</label>
+                    <input class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-colors duration-300 focus:border-blue-500 focus:outline-none" type="password" id="password" autocomplete="new-password" name="password" required />
                 </div>
 
                 <div class="mb-6">

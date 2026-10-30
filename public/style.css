@@ -1,0 +1,22 @@
+/* A quiet, consistent foundation for the blog's existing components. */
+:root { color-scheme: light; }
+body { background: #f6f7f9; color: #172033; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+nav { background: #1e293b !important; box-shadow: 0 1px 6px #17203318 !important; }
+nav > div { max-width: 1200px; margin: auto; }
+nav a { border-radius: 6px; }
+.container, .max-w-4xl { padding-bottom: 3rem; }
+.bg-white.rounded-lg, .auth-page .bg-white { border: 1px solid #e5e9ef; box-shadow: 0 4px 18px #1720330a; border-radius: 12px; }
+#posts-container > div[data-post-id]:hover { box-shadow: 0 8px 24px #17203312; }
+#posts-container h3 { color: #64748b; font-size: .8rem; margin-bottom: .5rem; }
+#posts-container h2, #single-post-container h1 { letter-spacing: -.025em; }
+input, textarea { background: #fff; min-width: 0; }
+input:focus, textarea:focus { outline: 2px solid #93b4e8; outline-offset: 1px; }
+a:focus-visible, button:focus-visible { outline: 2px solid #6b9ee5; outline-offset: 3px; }
+button, a { transition: color .2s, background-color .2s, box-shadow .2s; }
+.auth-page { background: #f3f5f8; }
+.auth-page .bg-white { padding: 2.5rem; }
+.brand-mark, .section-eyebrow { color: #38639a; font-size: .75rem; font-weight: 700; letter-spacing: .12em; margin-bottom: 1rem; text-transform: uppercase; }
+.auth-subtitle, .section-description { color: #64748b; margin-top: .6rem; line-height: 1.5; }
+.auth-page button { letter-spacing: normal; text-transform: none; }
+.auth-page a { color: #315f9c; font-weight: 600; }
+@media (max-width: 640px) { nav > div { padding-left: 1rem; padding-right: 1rem; } .auth-page .bg-white { padding: 1.75rem; } }

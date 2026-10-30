@@ -75,7 +75,6 @@ async function loadPosts() {
         }
         if (!posts || posts.length === 0) {
             if (noPosts) noPosts.classList.remove('hidden');
-            container.innerHTML = '';
             return;
         }
         if (noPosts) noPosts.classList.add('hidden');
