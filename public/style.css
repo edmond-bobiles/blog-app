@@ -18,9 +18,7 @@ button, a { transition: color .2s, background-color .2s, box-shadow .2s, transfo
 .auth-page .bg-white { padding: 2.5rem; }
 .brand-mark, .section-eyebrow { color: #2563eb; font-size: .75rem; font-weight: 700; letter-spacing: .12em; margin-bottom: 1rem; text-transform: uppercase; }
 .auth-subtitle, .section-description { color: #64748b; margin-top: .6rem; line-height: 1.5; }
-.auth-page button { letter-spacing: normal; text-transform: none; }
-.auth-page a { color: #2563eb; font-weight: 600; }
-.auth-page a:hover { color: #1d4ed8; text-decoration: underline; }
+.auth-page a { transition: color .15s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
 body { animation: fadeIn .2s ease-out; }
 .spinner { width: 28px; height: 28px; border: 3px solid #e2e8f0; border-top-color: #2563eb; border-radius: 50%; animation: spin .8s linear infinite; display: inline-block; }

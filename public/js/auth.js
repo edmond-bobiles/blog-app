@@ -1,3 +1,30 @@
+// Remember me prefill
+const rememberCheckbox = document.getElementById('rememberMe');
+const usernameInput = document.querySelector('input[name="username"]');
+if (rememberCheckbox && usernameInput) {
+    const savedUser = localStorage.getItem('remembered_username');
+    if (savedUser) {
+        usernameInput.value = savedUser;
+        rememberCheckbox.checked = true;
+    }
+}
+
+// Password visibility toggles
+document.querySelectorAll('.password-toggle').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const input = this.parentElement.querySelector('input');
+        if (!input) return;
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        const eyeIcon = this.querySelector('.eye-icon');
+        const eyeOffIcon = this.querySelector('.eye-off-icon');
+        if (eyeIcon && eyeOffIcon) {
+            eyeIcon.classList.toggle('hidden', !isPassword);
+            eyeOffIcon.classList.toggle('hidden', isPassword);
+        }
+    });
+});
+
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
     loginForm.addEventListener('submit', async function (e) {
@@ -6,6 +33,15 @@ if (loginForm) {
         const password = document.querySelector('input[name="password"]').value.trim();
         if (!username || !password) {
             return alert('Please fill in all fields.');
+        }
+
+        // Handle remember me state
+        if (rememberCheckbox) {
+            if (rememberCheckbox.checked) {
+                localStorage.setItem('remembered_username', username);
+            } else {
+                localStorage.removeItem('remembered_username');
+            }
         }
 
         // check if on signup page 
