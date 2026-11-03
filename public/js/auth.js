@@ -45,3 +45,39 @@ document.querySelectorAll('.logoutLink').forEach(link => {
         window.location.href = 'index.html';
     });
 });
+
+const resetPasswordForm = document.getElementById('resetPasswordForm');
+if (resetPasswordForm) {
+    resetPasswordForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const username = document.querySelector('input[name="username"]').value.trim();
+        const newPassword = document.querySelector('input[name="new_password"]').value.trim();
+        const confirmPassword = document.querySelector('input[name="confirm_password"]').value.trim();
+
+        if (!username || !newPassword || !confirmPassword) {
+            return alert('Please fill in all fields.');
+        }
+
+        if (newPassword !== confirmPassword) {
+            return alert('Passwords do not match.');
+        }
+
+        try {
+            const res = await fetch(`${API_BASE}/reset-password/`, {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, new_password: newPassword })
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) {
+                return alert(data.error || data.detail || 'Password reset failed');
+            }
+
+            alert('Password reset successfully! Please sign in with your new password.');
+            window.location.href = 'index.html';
+        } catch (err) {
+            console.error(err);
+            alert('Network error, try again.');
+        }
+    });
+}

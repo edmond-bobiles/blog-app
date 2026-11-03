@@ -5,6 +5,10 @@ class UserCreate(BaseModel):
     username: str
     password: str
 
+class PasswordReset(BaseModel):
+    username: str
+    new_password: str
+
 class UserOut(BaseModel):
     id: int
     username: str

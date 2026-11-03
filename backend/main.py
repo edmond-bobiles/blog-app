@@ -52,6 +52,17 @@ def login(user: schemas.UserCreate, db: Session = Depends(get_db)):
         return {"error": "Invalid credentials"}
     return {"id": db_user.id, "username": db_user.username}
 
+@app.post("/reset-password/")
+def reset_password(payload: schemas.PasswordReset, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.username == payload.username).first()
+    if not db_user:
+        return {"error": "User not found"}
+    if not payload.new_password.strip():
+        return {"error": "New password cannot be empty"}
+    db_user.password = payload.new_password
+    db.commit()
+    return {"detail": "Password reset successfully"}
+
 @app.get("/users/{user_id}")
 def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
