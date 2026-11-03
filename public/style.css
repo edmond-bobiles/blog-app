@@ -6,17 +6,24 @@ nav > div { max-width: 1200px; margin: auto; }
 nav a { border-radius: 6px; }
 .container, .max-w-4xl { padding-bottom: 3rem; }
 .bg-white.rounded-lg, .auth-page .bg-white { border: 1px solid #e5e9ef; box-shadow: 0 4px 18px #1720330a; border-radius: 12px; }
-#posts-container > div[data-post-id]:hover { box-shadow: 0 8px 24px #17203312; }
+#posts-container > div[data-post-id] { transition: transform .2s ease, box-shadow .2s ease; }
+#posts-container > div[data-post-id]:hover { transform: translateY(-2px); box-shadow: 0 10px 24px #17203314; }
 #posts-container h3 { color: #64748b; font-size: .8rem; margin-bottom: .5rem; }
 #posts-container h2, #single-post-container h1 { letter-spacing: -.025em; }
-input, textarea { background: #fff; min-width: 0; }
+input, textarea { background: #fff; min-width: 0; transition: border-color .2s ease, box-shadow .2s ease; }
 input:focus, textarea:focus { outline: 2px solid #93b4e8; outline-offset: 1px; }
 a:focus-visible, button:focus-visible { outline: 2px solid #6b9ee5; outline-offset: 3px; }
-button, a { transition: color .2s, background-color .2s, box-shadow .2s; }
+button, a { transition: color .2s, background-color .2s, box-shadow .2s, transform .2s; }
 .auth-page { background: #f3f5f8; }
 .auth-page .bg-white { padding: 2.5rem; }
 .brand-mark, .section-eyebrow { color: #38639a; font-size: .75rem; font-weight: 700; letter-spacing: .12em; margin-bottom: 1rem; text-transform: uppercase; }
 .auth-subtitle, .section-description { color: #64748b; margin-top: .6rem; line-height: 1.5; }
 .auth-page button { letter-spacing: normal; text-transform: none; }
 .auth-page a { color: #315f9c; font-weight: 600; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+body { animation: fadeIn .2s ease-out; }
+.spinner { width: 28px; height: 28px; border: 3px solid #e2e8f0; border-top-color: #2563eb; border-radius: 50%; animation: spin .8s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.avatar-initial { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #e0e7ff; color: #3730a3; font-weight: 600; font-size: .75rem; text-transform: uppercase; flex-shrink: 0; }
+.comment-card { border-left: 3px solid #60a5fa; }
 @media (max-width: 640px) { nav > div { padding-left: 1rem; padding-right: 1rem; } .auth-page .bg-white { padding: 1.75rem; } }
