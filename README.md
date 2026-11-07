@@ -1,4 +1,4 @@
-# 📝 Blog App
+# Blog App
 
 A modern, full-stack blog application featuring a lightweight static frontend styled with Tailwind CSS and a fast RESTful backend powered by FastAPI, SQLAlchemy, and SQLite/PostgreSQL.
 
