@@ -27,7 +27,7 @@ A modern, full-stack blog application featuring a lightweight static frontend st
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technologies |
 | :--- | :--- |
@@ -38,7 +38,7 @@ A modern, full-stack blog application featuring a lightweight static frontend st
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 blog-app/
