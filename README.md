@@ -4,7 +4,7 @@ A modern, full-stack blog application featuring a lightweight static frontend st
 
 ---
 
-## ✨ Features
+## Features
 
 - **User Authentication & Management**
   - User registration and login with client-side session persistence (`localStorage`).
@@ -23,9 +23,7 @@ A modern, full-stack blog application featuring a lightweight static frontend st
   - Mobile-friendly navigation with collapsible drawer menu.
   - Built-in XSS sanitization (`escapeHtml`) on dynamic content rendering.
   - Automatic API base URL detection (local development vs. production).
-- **Vercel & Cloud Deployment Ready**
-  - Root entry points (`main.py` and `requirements.txt`) configured for seamless serverless deployment.
-  - Automatic database adapter switching (SQLite locally, PostgreSQL in cloud).
+
 
 ---
 
@@ -78,7 +76,7 @@ blog-app/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -136,7 +134,7 @@ python3 -m http.server 5500
 
 ---
 
-## 👥 Demo Accounts & Database Seeding
+## Demo Accounts & Database Seeding
 
 To quickly test the application with pre-populated accounts and a sample blog post, run the seed script:
 
@@ -158,7 +156,7 @@ The seeded accounts (from [DEMO_ACCOUNTS.md](DEMO_ACCOUNTS.md)):
 
 ---
 
-## 📜 Available npm Scripts
+## Available npm Scripts
 
 | Script | Command | Purpose |
 | :--- | :--- | :--- |
